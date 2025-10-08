@@ -39,13 +39,13 @@ int getDigitFrequencyInNumber(int Digit, int Number)
     return (Frequency);
 }
 
-void printNumberSumOfDigits(int Digit, int Number)
+void printDigitFrequencyInNumber(int Digit, int Number)
 {
     std::cout << Digit << " Frequency in " << Number << " is : " << getDigitFrequencyInNumber(Digit, Number) << " Times\n";
 }
 
 int main(void)
 {
-    printNumberSumOfDigits(readDigit(), readNumber());
+    printDigitFrequencyInNumber(readDigit(), readNumber());
     return (0);
 }
