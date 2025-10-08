@@ -29,13 +29,13 @@ int getReversedNumber(int Number)
     return (ReversedNumber);
 }
 
-void printNumberSumOfDigits(int Number)
+void printNumberReversed(int Number)
 {
     std::cout << "Reversed Of " << Number << "  : " << getReversedNumber(Number) << '\n';
 }
 
 int main(void)
 {
-    printNumberSumOfDigits(readNumber());
+    printNumberReversed(readNumber());
     return (0);
 }
