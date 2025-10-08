@@ -23,7 +23,7 @@ int getReversedNumber(int Number)
 
     while (Remainder != 0)
     {
-        ReversedNumber *= 10;
+        ReversedNumber  *= 10;
         ReversedNumber  += LastDigitOf(Remainder);
         Remainder /= 10;
     }
