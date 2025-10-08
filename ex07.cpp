@@ -20,7 +20,6 @@ int getReversedNumber(int Number)
     int Remainder       = Number;
     int ReversedNumber  = 0;
 
-
     while (Remainder != 0)
     {
         ReversedNumber  *= 10;
