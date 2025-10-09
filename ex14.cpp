@@ -12,7 +12,7 @@ int readNumber(void)
     return (Number);
 }
 
-void printInvertedPattern(int Number)
+void printInvertedLetterPattern(int Number)
 {
     for (int i = Number + (A - 1); i >= A; i--)
     {
@@ -26,6 +26,6 @@ void printInvertedPattern(int Number)
 
 int main(void)
 {
-    printInvertedPattern(readNumber());
+    printInvertedLetterPattern(readNumber());
     return (0);
 }
