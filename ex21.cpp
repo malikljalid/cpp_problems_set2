@@ -51,6 +51,8 @@ void printKeys(int keysNumber)
 
 int main(void)
 {
+    srand((unsigned)time(NULL));
+
     printKeys(readHowManyKeys());
     return (0);
 }
