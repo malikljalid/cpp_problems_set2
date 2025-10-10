@@ -53,8 +53,6 @@ void printOccuranceOfNumberInArray(int Number, int Occ)
 
 int main(void)
 {
-    srand((unsigned)time(NULL));
-
     int arr[MAXSIZE];
     int arrSize = 0;
 
