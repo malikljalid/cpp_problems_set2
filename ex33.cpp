@@ -28,7 +28,7 @@ std::string generateKey(void)
 {
     std::string key = "XXXX-XXXX-XXXX-XXXX";
 
-    for (int i = 0; i < key.length(); i++)
+    for (int i = 0; i < (int)key.length(); i++)
     {
         if (isNotUnderscore(i))
             key[i] = randomNumber('A', 'Z');
