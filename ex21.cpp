@@ -24,7 +24,7 @@ bool is_underscore(int index)
 
 std::string generateKey(void)
 {
-    std::string key = "";
+    std::string key = "AAAA-BBBB-CCCC-DDDD";
 
     for (int i = 0; i < KeyLength; i++)
     {
