@@ -49,8 +49,8 @@ int main(void)
 {
     float Number = readNumber();
 
-    std::cout << "My abs  : " << myRound(Number) << '\n';
-    std::cout << "C++ abs : " << round(Number) << '\n';
+    std::cout << "My round  : " << myRound(Number) << '\n';
+    std::cout << "C++ round : " << round(Number) << '\n';
 
     return (0);
 }
