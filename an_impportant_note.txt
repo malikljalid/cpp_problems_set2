@@ -1,0 +1,10 @@
+there is some files here include a mistaken random formula by me!!
+
+instead of setting random function to 
+
+return ((rand() % To - From + 1) + From)
+
+i made it 
+return ((rand() % To - From + 1) - From)
+
+but that's fine for most of the problems in this sit.. but the the negativ or postive count problems, you will need to fix it!
