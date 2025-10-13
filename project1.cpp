@@ -2,11 +2,10 @@
 #include <cstdlib>
 #include <ctime>
 
-enum enMaxRounds        { MAXROUNDS = 10 };
-enum enRoundChoice      { SCISSOR, STONE, PAPER };
+enum enRoundChoice      { SCISSOR=1, STONE, PAPER };
 enum enRoundStatus      { WON, LOST, DRAW };
 enum enRoundWinner      { PLAYER1, COMPUTER, NOBODY };
-enum enColors           { RED, GREEN, YELLOW };
+enum enColors           { RED=31, GREEN=32, YELLOW=33 };
 
 struct stPlayer
 {
@@ -16,18 +15,9 @@ struct stPlayer
     short int       Draws;
 };
 
-// struct stRound
-// {
-//     // short int       Number;
-//     // stPlayer        Player1;
-//     // stPlayer        Computer;
-//     enRoundWinner   Winner;
-// };
-
 struct stGame
 {
     short int       Rounds;
-    // stRound         Game[MAXROUNDS];
     stPlayer        Player1;
     stPlayer        Computer;
     enRoundWinner   RoundWinner;
@@ -55,6 +45,23 @@ short int getRoundsNumber(void)
     std::cin >> Rounds;
 
     return (Rounds);
+}
+
+void initPlayer(stPlayer &Player)
+{
+    Player.Draws = 0;
+    Player.Wins  = 0;
+}
+
+stGame initGame(void)
+{
+    stGame Game;
+
+    initPlayer(Game.Player1);
+    initPlayer(Game.Computer);
+    Game.Rounds = getRoundsNumber();
+
+    return (Game);
 }
 
 enRoundChoice getPlayerChoice(void)
@@ -98,104 +105,86 @@ enRoundStatus getPlayerStatus(enRoundChoice Player1, enRoundChoice Player2)
     return (enRoundStatus::LOST);
 }
 
-void fillPlayerRoundStats(enRoundWinner Winner, stPlayer &Player1)
+void fillPlayersStats(stGame &Round)
 {
-    if (Winner == PLAYER1)
+    if (Round.RoundWinner == PLAYER1)
+        Round.Player1.Wins++;
+    if (Round.RoundWinner == COMPUTER)
+        Round.Computer.Wins++;
+    if (Round.RoundWinner == NOBODY)
     {
-        Player1.Status = enRoundStatus::WON;
-        std::cout << "wiiins of player 1 : " << Player1.Wins << std::endl;
-        Player1.Wins++;
-        std::cout << "wiiins of player 1 : " << Player1.Wins << std::endl;
-
+        Round.Player1.Draws++;
+        Round.Computer.Draws++;
     }
-
-    if (Winner == NOBODY)
-        Player1.Draws++;
 }
 
-void fillComputerRoundStats(enRoundWinner Winner, stPlayer &Computer)
+enRoundWinner getGameFinalWinner(stGame &Game)
 {
-    if (Winner == COMPUTER)
-    {
-        Computer.Status = enRoundStatus::WON;
-        Computer.Wins++;
-    }
-
-    if (Winner == NOBODY)
-        Computer.Draws++;
+    if (Game.Player1.Wins > Game.Computer.Wins)
+        return (enRoundWinner::PLAYER1);
+    else if (Game.Player1.Wins < Game.Computer.Wins)
+        return (enRoundWinner::COMPUTER);
+    else
+        return (enRoundWinner::NOBODY);
 }
 
-void initPlayer(stPlayer &Player)
+void playGame(stGame &Round)
 {
-    Player.Draws = 0;
-    Player.Wins  = 0;
-}
-
-void playGame(stRound &Round)
-{
-    initPlayer(Round.Player1);
-    initPlayer(Round.Computer);
 
     Round.Player1.Choice    = getPlayerChoice();  
     Round.Computer.Choice   = getComputerChoice();
+
     Round.Player1.Status    = getPlayerStatus(Round.Player1.Choice, Round.Computer.Choice);
     Round.Computer.Status   = getPlayerStatus(Round.Computer.Choice, Round.Player1.Choice);
-    Round.Winner            = getRoundWinner(Round.Player1.Status);
 
-    fillPlayerRoundStats(Round.Winner, Round.Player1);
-    fillPlayerRoundStats(Round.Winner, Round.Computer);
+    Round.RoundWinner       = getRoundWinner(Round.Player1.Status);
 
-}
-
-void fillPlayersGameStats(stGame &Game, short int RoundIndex)
-{
-    std::cout << "\n\n maybe here : " << Game.Round[RoundIndex].Player1.Wins << std::endl;
-
-    Game.Player1.Wins   += Game.Round[RoundIndex].Player1.Wins;
-    Game.Computer.Wins  += Game.Round[RoundIndex].Computer.Wins;
-    Game.Player1.Draws  += Game.Round[RoundIndex].Computer.Draws;
-
-    if (Game.Player1.Wins > Game.Computer.Wins)
-        Game.FinalWinner = enRoundWinner::PLAYER1;
-    else if (Game.Player1.Wins < Game.Computer.Wins)
-        Game.FinalWinner = enRoundWinner::COMPUTER;
-    else
-        Game.FinalWinner = enRoundWinner::NOBODY;
+    fillPlayersStats(Round);
 }
 
 void showRoundResults(stGame Game, short int RoundNumber)
 {
-    std::cout << "_________Round[" << RoundNumber << "]___________\n";
-    std::cout << "Player1  choice : " << Game.Player1.Choice << '\n';
-    std::cout << "Computer choice : " << Game.Computer.Choice << '\n';
-    std::cout << "Round Winner    : [" << Game.RoundWinner << "]\n";
-    std::cout << "_________________________________________________\n";
+    std::string Option[3] = { "SCISSOR", "STONE", "PAPER" };
+    std::string Player[3] = { "PLAYER 1", "COMPUTER", "NO WINNER" };
+    enColors    Color[3]  = { GREEN, RED, YELLOW };
+
+    std::cout << "\n\n_________Round[" << RoundNumber << "]___________\n";
+    std::cout << "Player1  choice : " << Option[Game.Player1.Choice - 1] << '\n';
+    std::cout << "Computer choice : " << Option[Game.Computer.Choice - 1] << '\n';
+    std::cout << "Round Winner    : ";
+    textInColor("[" + Player[Game.RoundWinner] + "]", Color[Game.RoundWinner]);
+    std::cout << "____________________________\n\n\n";
 }
 
 void showGameResults(stGame Game)
 {
-    std::cout << "\t\t\t_____________________________________________";
-    std::cout << "\t\t\t            +++ GAME OVER +++ \n";
-    std::cout << "\t\t\t___________________________________\n";
-    std::cout << "\t\t\t_____________ [Game Results] ______________\n";
-    std::cout << "\t\t\t Game Rounds        : " << Game.Rounds << '\n';
-    std::cout << "\t\t\t Player1 Won Times  : " << Game.Player1.Wins  << '\n';
-    std::cout << "\t\t\t Computer Won Times : " << Game.Computer.Wins << '\n';
-    std::cout << "\t\t\t Draw Times         : " << Game.Player1.Draws << '\n';
-    std::cout << "\t\t\t Final Winner       : " << Game.FinalWinner << '\n';
+    std::string Player[3] = { "PLAYER 1", "COMPUTER", "NO WINNER" };
+    enColors    Color[3]  = { GREEN, RED, YELLOW };
+
+    std::cout << "\n\t______________________________________________\n";
+    std::cout << "\t            +++ GAME OVER +++ \n";
+    std::cout << "\t______________________________________________\n";
+    std::cout << "\t_____________ [Game Results] _________________\n";
+    std::cout << "\t Game Rounds        : " << Game.Rounds << '\n';
+    std::cout << "\t Player1 Won Times  : " << Game.Player1.Wins  << '\n';
+    std::cout << "\t Computer Won Times : " << Game.Computer.Wins << '\n';
+    std::cout << "\t Draw Times         : " << Game.Player1.Draws << '\n';
+    std::cout << "\t Final Winner       : ";
+    textInColor(Player[Game.FinalWinner], Color[Game.FinalWinner] );
+    std::cout << "\t______________________________________________\n";
 }
 
 void gameLoop(void)
 {
-    stGame      Game;
+    stGame      Game = initGame();
 
-    Game.Rounds = getRoundsNumber();
     for (short int i = 0; i < Game.Rounds; i++)
     {
-        playGame(Game.Round[i]);
-        fillPlayersGameStats(Game, i);
-        showRoundResults(Game.Round[i], i);
+        playGame(Game);
+        showRoundResults(Game, i);
     }
+
+    Game.FinalWinner = getGameFinalWinner(Game);
     showGameResults(Game);
 }
 
