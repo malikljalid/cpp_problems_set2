@@ -17,6 +17,7 @@ struct stPlayer
 
 struct stGame
 {
+    char            Repeat;
     short int       Rounds;
     stPlayer        Player1;
     stPlayer        Computer;
@@ -39,11 +40,13 @@ void textInColor(std::string txt, int color)
 
 short int getRoundsNumber(void)
 {
-    short int Rounds;
+    short int Rounds = -1;
 
-    std::cout << "How many rounds you wanna play ? : ";
-    std::cin >> Rounds;
-
+    while (Rounds < 0)
+    {
+        std::cout << "How many rounds you wanna play ? : ";
+        std::cin >> Rounds;
+    }
     return (Rounds);
 }
 
@@ -60,16 +63,21 @@ stGame initGame(void)
     initPlayer(Game.Player1);
     initPlayer(Game.Computer);
     Game.Rounds = getRoundsNumber();
+    Game.Repeat = '\0';
 
     return (Game);
 }
 
 enRoundChoice getPlayerChoice(void)
 {
-    short int userChoice;
+    short int userChoice = 0;
 
-    std::cout << "What's your choice from [1]-> Scissor [2]-> Stone [3]-> Paper  ? : ";
-    std::cin  >> userChoice;
+    do
+    {
+        std::cout << "What's your choice from [1]-> Scissor [2]-> Stone [3]-> Paper  ? : ";
+        std::cin  >> userChoice;
+    }
+    while (userChoice != 1 && userChoice != 2 && userChoice != 3);
 
     return ((enRoundChoice)userChoice);
 }
@@ -105,6 +113,16 @@ enRoundStatus getPlayerStatus(enRoundChoice Player1, enRoundChoice Player2)
     return (enRoundStatus::LOST);
 }
 
+enRoundWinner getGameFinalWinner(stGame &Game)
+{
+    if (Game.Player1.Wins > Game.Computer.Wins)
+        return (enRoundWinner::PLAYER1);
+    else if (Game.Player1.Wins < Game.Computer.Wins)
+        return (enRoundWinner::COMPUTER);
+    else
+        return (enRoundWinner::NOBODY);
+}
+
 void fillPlayersStats(stGame &Round)
 {
     if (Round.RoundWinner == PLAYER1)
@@ -116,16 +134,6 @@ void fillPlayersStats(stGame &Round)
         Round.Player1.Draws++;
         Round.Computer.Draws++;
     }
-}
-
-enRoundWinner getGameFinalWinner(stGame &Game)
-{
-    if (Game.Player1.Wins > Game.Computer.Wins)
-        return (enRoundWinner::PLAYER1);
-    else if (Game.Player1.Wins < Game.Computer.Wins)
-        return (enRoundWinner::COMPUTER);
-    else
-        return (enRoundWinner::NOBODY);
 }
 
 void playGame(stGame &Round)
@@ -156,7 +164,7 @@ void showRoundResults(stGame Game, short int RoundNumber)
     std::cout << "____________________________\n\n\n";
 }
 
-void showGameResults(stGame Game)
+char showGameResults(stGame Game)
 {
     std::string Player[3] = { "PLAYER 1", "COMPUTER", "NO WINNER" };
     enColors    Color[3]  = { GREEN, RED, YELLOW };
@@ -172,12 +180,17 @@ void showGameResults(stGame Game)
     std::cout << "\t Final Winner       : ";
     textInColor(Player[Game.FinalWinner], Color[Game.FinalWinner] );
     std::cout << "\t______________________________________________\n";
+
+    while (Game.Repeat != 'y' && Game.Repeat != 'n')
+    {
+        std::cout << "\t Do you want to play again ? (Yes[y] / No[n]) : ";
+        std::cin >> Game.Repeat;
+    }
+    return (Game.Repeat);
 }
 
-void gameLoop(void)
+char gameLoop(stGame Game)
 {
-    stGame      Game = initGame();
-
     for (short int i = 0; i < Game.Rounds; i++)
     {
         playGame(Game);
@@ -185,14 +198,15 @@ void gameLoop(void)
     }
 
     Game.FinalWinner = getGameFinalWinner(Game);
-    showGameResults(Game);
+    return (showGameResults(Game));
 }
 
 int main(void)
 {
     srand((unsigned int)time(NULL));
 
-    gameLoop();
+    while (gameLoop(initGame()) == 'y') { }
 
     return (0);
 }
+//
