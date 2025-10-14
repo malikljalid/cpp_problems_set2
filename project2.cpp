@@ -22,6 +22,14 @@ int randomNumber(int From, int To)
     return ((rand() % (To - From + 1)) + From);
 }
 
+void textInColor(std::string txt, int color)
+{
+    std::cout << "\033[" << color << "m"; // setting the color code to console
+    std::cout << txt << ' ';
+    std::cout << "\033[0m";              // reseting the color console
+    std::cout << std::endl;
+}
+
 stOperations initOperations(void)
 {
     stOperations Ops;
