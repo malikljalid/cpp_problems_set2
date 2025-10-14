@@ -30,18 +30,6 @@ void textInColor(std::string txt, int color)
     std::cout << std::endl;
 }
 
-stOperations initOperations(void)
-{
-    stOperations Ops;
-
-    Ops.NumberOfQuestions = 0;
-    Ops.WrongAnswers      = 0;
-    Ops.RightAnswers      = 0;
-    Ops.playAgain         = '\0';
-
-    return (Ops);
-}
-
 short int getHowManyQuestionsUserWantToAnswer(void)
 {
     short int NumberOfQuestions = 0;
@@ -75,10 +63,26 @@ enOperationsType getUserQuestionsType(void)
 {
     short int OperationsType;
 
-    std::cout << "Enter Questions Type [1]->Add [2]->Sub [3]->Mul [4]->Div : ";
+    std::cout << "Enter Questions Type [1]->Add [2]->Sub [3]->Mul [4]->Div [5]->Mix : ";
     std::cin >> OperationsType;
 
     return ((enOperationsType)OperationsType);
+}
+
+stOperations initOperations(void)
+{
+    stOperations Ops;
+
+    Ops.NumberOfQuestions = 0;
+    Ops.WrongAnswers      = 0;
+    Ops.RightAnswers      = 0;
+    Ops.playAgain         = '\0';
+
+    Ops.Level = getUserQuestionsLevel();
+    Ops.Type  = getUserQuestionsType();
+    Ops.NumberOfQuestions = getHowManyQuestionsUserWantToAnswer();
+
+    return (Ops);
 }
 
 int getRandomNumberFromLevel(enOperationsLevel Level)
@@ -86,13 +90,13 @@ int getRandomNumberFromLevel(enOperationsLevel Level)
     switch (Level)
     {
         case (EASY) :
-            return (randomNumber(0, 9));
+            return (randomNumber(1, 9));
         case (MED)  :
             return (randomNumber(10, 19));
         case (HARD) :
             return (randomNumber(20, 100));
         default     :
-            return (randomNumber(0, 100));
+            return (randomNumber(1, 100));
     }
 }
 
@@ -132,11 +136,6 @@ float getOperationResult(int Number1, int Number2, char Operation)
     }
 }
 
-int checkOperationResult(float userAnswer, float rightAnswer)
-{
-    return (userAnswer == rightAnswer);
-}
-
 void showSingleOperation(int Number1, int Number2, char OpType)
 {
     std::cout << Number1 << '\n';
@@ -155,10 +154,37 @@ int makeOperation(enOperationsLevel Level, enOperationsType Type)
     return (getOperationResult(Number1, Number2, OpType));
 }
 
-// make the main game math monitor
+bool userAnswerIsRight(float userAnswer, float rightAnswer)
+{
+    return (userAnswer == rightAnswer);
+}
 
+void playQuestion(stOperations &Operation)
+{
+    float rightAnswer= makeOperation(Operation.Level, Operation.Type);
 
-void showOperationsResults(stOperations Operations)
+    if (userAnswerIsRight(getUserAnswer(), rightAnswer))
+    {
+        std::cout << "Right Answer :)\n";
+        Operation.RightAnswers++;
+    }
+    else
+    {
+        std::cout << "Wrong Answer :(\n";
+        std::cout << "The right answer is : " << rightAnswer << '\n';
+        Operation.WrongAnswers++;
+    }
+}
+
+enOperationsResult getFinalResult(short int WrongAnswers, short int RightAnswers)
+{
+    if (WrongAnswers >= RightAnswers)
+        return (enOperationsResult::PASS);
+    else
+        return (enOperationsResult::FAIL);
+}
+
+void showOperationsGameResults(stOperations Operations)
 {
     std::string Result[2] = { "Fail :(", "PASS :)" };
     std::string Level[4]  = { "Easy", "Med", "Hard", "Mix" };
@@ -168,16 +194,32 @@ void showOperationsResults(stOperations Operations)
     std::cout << "\tFinal Result is : " << Result[Operations.FinalResult] << '\n';
     std::cout << "___________________________\n";
     std::cout << "Number of questions : " << Operations.NumberOfQuestions << '\n';
-    std::cout << "Operations Level : " << Level[Operations.Level] << '\n';
-    std::cout << "Operations Type  : " << Type[Operations.Type] << '\n';
+    std::cout << "Operations Level : " << Level[Operations.Level - 1] << '\n';
+    std::cout << "Operations Type  : " << Type[Operations.Type - 1] << '\n';
     std::cout << "Number of Right Answers : " << Operations.RightAnswers << '\n';
     std::cout << "Number of Wrong Answers : " << Operations.WrongAnswers << '\n';
     std::cout << "___________________________\n\n";
 }
 
+// make the main game math monitor
+void gameLoop(void)
+{
+    stOperations Operations = initOperations();
+
+    for (int i = 0; i < Operations.NumberOfQuestions; i++)
+    {
+        std::cout << "Question [" << i << "]\n";
+        playQuestion(Operations);
+    }
+
+    Operations.FinalResult = getFinalResult(Operations.WrongAnswers, Operations.RightAnswers);
+    showOperationsGameResults(Operations);
+}
+
 int main(void)
 {
     srand((unsigned int)time(NULL));
+    gameLoop();
 
     return (0);
 }
