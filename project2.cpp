@@ -185,7 +185,7 @@ enOperationsResult setFinalResult(short int WrongAnswers, short int RightAnswers
         return (enOperationsResult::FAIL);
 }
 
-char showOperationsGameResults(stOperations Operations)
+char showOperationsQuizResults(stOperations Operations)
 {
     std::string Result[2] = { "FAIL :(", "PASS :)" };
     std::string Level[4]  = { "Easy", "Med", "Hard", "Mix" };
@@ -211,7 +211,7 @@ char showOperationsGameResults(stOperations Operations)
     return (Operations.playAgain);
 }
 
-char gameLoop(void)
+char quizLoop(void)
 {
     stOperations Operations = initOperations();
 
@@ -222,7 +222,7 @@ char gameLoop(void)
     }
 
     Operations.FinalResult = setFinalResult(Operations.WrongAnswers, Operations.RightAnswers);
-    return (showOperationsGameResults(Operations));
+    return (showOperationsQuizResults(Operations));
 }
 
 int main(void)
@@ -231,7 +231,7 @@ int main(void)
 
     while (1)
     {
-        if (gameLoop() == 'n')
+        if (quizLoop() == 'n')
             break; 
     }
 
