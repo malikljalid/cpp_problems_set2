@@ -22,9 +22,20 @@ int randomNumber(int From, int To)
     return ((rand() % (To - From + 1)) + From);
 }
 
+stOperations initOperations(void)
+{
+    stOperations Ops;
+
+    Ops.NumberOfQuestions = 0;
+    Ops.WrongAnswers      = 0;
+    Ops.RightAnswers      = 0;
+    Ops.playAgain         = '\0';
+
+    return (Ops);
+}
+
 int main(void)
 {
     srand((unsigned int)time(NULL));
     return (0);
 }
-//logic
