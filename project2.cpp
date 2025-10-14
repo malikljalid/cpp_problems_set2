@@ -31,16 +31,6 @@ void textInColor(std::string txt, int color)
     std::cout << std::endl;
 }
 
-short int getHowManyQuestionsUserWantToAnswer(void)
-{
-    short int NumberOfQuestions = 0;
-
-    std::cout << "How many questions do you want to answer ? : ";
-    std::cin >> NumberOfQuestions;
-
-    return (NumberOfQuestions);
-}
-
 float getUserAnswer(void)
 {
     float userAnswer;
@@ -50,17 +40,27 @@ float getUserAnswer(void)
     return (userAnswer);
 }
 
-enOperationsLevel getUserQuestionsLevel(void)
+short int setHowManyQuestionsUserWantToAnswer(void)
+{
+    short int NumberOfQuestions = 0;
+
+    std::cout << "How many questions do you want to answer ? : ";
+    std::cin >> NumberOfQuestions;
+
+    return (NumberOfQuestions);
+}
+
+enOperationsLevel setUserQuestionsLevel(void)
 {
     short int OperationsLevel;
 
-    std::cout << "Enter Questions Level [1]->Easy [2]->Med [3]->Hard [4]->Mix : ";
+    std::cout << "\n\nEnter Questions Level [1]->Easy   [2]->Med   [3]->Hard   [4]->Mix : ";
     std::cin >> OperationsLevel;
 
     return ((enOperationsLevel)OperationsLevel);
 }
 
-enOperationsType getUserQuestionsType(void)
+enOperationsType setUserQuestionsType(void)
 {
     short int OperationsType;
 
@@ -79,9 +79,9 @@ stOperations initOperations(void)
     Ops.RightAnswers      = 0;
     Ops.playAgain         = '\0';
 
-    Ops.Level = getUserQuestionsLevel();
-    Ops.Type  = getUserQuestionsType();
-    Ops.NumberOfQuestions = getHowManyQuestionsUserWantToAnswer();
+    Ops.Level = setUserQuestionsLevel();
+    Ops.Type  = setUserQuestionsType();
+    Ops.NumberOfQuestions = setHowManyQuestionsUserWantToAnswer();
 
     return (Ops);
 }
@@ -185,7 +185,7 @@ enOperationsResult setFinalResult(short int WrongAnswers, short int RightAnswers
         return (enOperationsResult::FAIL);
 }
 
-void showOperationsGameResults(stOperations Operations)
+char showOperationsGameResults(stOperations Operations)
 {
     std::string Result[2] = { "FAIL :(", "PASS :)" };
     std::string Level[4]  = { "Easy", "Med", "Hard", "Mix" };
@@ -202,10 +202,16 @@ void showOperationsGameResults(stOperations Operations)
     std::cout << "\tNumber of Right Answers : " << Operations.RightAnswers << '\n';
     std::cout << "\tNumber of Wrong Answers : " << Operations.WrongAnswers << '\n';
     std::cout << "\t___________________________\n\n";
+
+    while (Operations.playAgain != 'y' && Operations.playAgain != 'n')
+    {
+        std::cout << "\tDo you want to play again (Y/N) : ";
+        std::cin >> Operations.playAgain;
+    }
+    return (Operations.playAgain);
 }
 
-
-void gameLoop(void)
+char gameLoop(void)
 {
     stOperations Operations = initOperations();
 
@@ -216,13 +222,18 @@ void gameLoop(void)
     }
 
     Operations.FinalResult = setFinalResult(Operations.WrongAnswers, Operations.RightAnswers);
-    showOperationsGameResults(Operations);
+    return (showOperationsGameResults(Operations));
 }
 
 int main(void)
 {
     srand((unsigned int)time(NULL));
-    gameLoop();
+
+    while (1)
+    {
+        if (gameLoop() == 'n')
+            break; 
+    }
 
     return (0);
 }
