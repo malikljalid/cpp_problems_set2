@@ -64,10 +64,26 @@ enOperationsType getUserQuestionsType(void)
     return ((enOperationsType)OperationsType);
 }
 
+void showOperationsResults(stOperations Operations)
+{
+    std::string Result[2] = { "Fail :(", "PASS :)" };
+    std::string Level[4]  = { "Easy", "Med", "Hard", "Mix" };
+    std::string Type[5]   = { "+", "-", "*", "/", "Mix" };
 
+    std::cout << "\n___________________________\n";
+    std::cout << "\tFinal Result is : " << Result[Operations.FinalResult] << '\n';
+    std::cout << "___________________________\n";
+    std::cout << "Number of questions : " << Operations.NumberOfQuestions << '\n';
+    std::cout << "Operations Level : " << Level[Operations.Level] << '\n';
+    std::cout << "Operations Type  : " << Type[Operations.Type] << '\n';
+    std::cout << "Number of Right Answers : " << Operations.RightAnswers << '\n';
+    std::cout << "Number of Wrong Answers : " << Operations.WrongAnswers << '\n';
+    std::cout << "___________________________\n\n";
+}
 
 int main(void)
 {
     srand((unsigned int)time(NULL));
+
     return (0);
 }
