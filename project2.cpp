@@ -52,6 +52,15 @@ short int getHowManyQuestionsUserWantToAnswer(void)
     return (NumberOfQuestions);
 }
 
+float getUserAnswer(void)
+{
+    float userAnswer;
+
+    std::cin >> userAnswer;
+
+    return (userAnswer);
+}
+
 enOperationsLevel getUserQuestionsLevel(void)
 {
     short int OperationsLevel;
@@ -71,6 +80,83 @@ enOperationsType getUserQuestionsType(void)
 
     return ((enOperationsType)OperationsType);
 }
+
+int getRandomNumberFromLevel(enOperationsLevel Level)
+{
+    switch (Level)
+    {
+        case (EASY) :
+            return (randomNumber(0, 9));
+        case (MED)  :
+            return (randomNumber(10, 19));
+        case (HARD) :
+            return (randomNumber(20, 100));
+        default     :
+            return (randomNumber(0, 100));
+    }
+}
+
+char getOperationSymbol(enOperationsType Type)
+{
+    char symbol[4] = { '+', '-', '*', '/' };
+
+    switch (Type)
+    {
+        case (ADD) :
+            return ('+');
+        case (SUB) :
+            return ('-');
+        case (MUL) :
+            return ('*');
+        case (DIV) :
+            return ('/');
+        default    :
+            return (symbol[randomNumber(0, 3)]);
+    }
+}
+
+float getOperationResult(int Number1, int Number2, char Operation)
+{
+    switch (Operation)
+    {
+        case ('+') :
+            return (Number1 + Number2);
+        case ('-') :
+            return (Number1 - Number2);
+        case ('*') :
+            return (Number1 * Number2);
+        case ('/') :
+            return (Number1 / (float)Number2);
+        default    :
+            return (0);
+    }
+}
+
+int checkOperationResult(float userAnswer, float rightAnswer)
+{
+    return (userAnswer == rightAnswer);
+}
+
+void showSingleOperation(int Number1, int Number2, char OpType)
+{
+    std::cout << Number1 << '\n';
+    std::cout << Number2 << ' ' << OpType << '\n';
+    std::cout << "______\n";
+}
+
+int makeOperation(enOperationsLevel Level, enOperationsType Type)
+{
+    int Number1 = getRandomNumberFromLevel(Level);
+    int Number2 = getRandomNumberFromLevel(Level);
+    char OpType = getOperationSymbol(Type);
+
+    showSingleOperation(Number1, Number2, OpType);
+
+    return (getOperationResult(Number1, Number2, OpType));
+}
+
+// make the main game math monitor
+
 
 void showOperationsResults(stOperations Operations)
 {
