@@ -144,7 +144,7 @@ void showSingleOperation(int Number1, int Number2, char OpType)
     std::cout << "______\n";
 }
 
-int makeOperation(enOperationsLevel Level, enOperationsType Type)
+float makeOperation(enOperationsLevel Level, enOperationsType Type)
 {
     int Number1 = getRandomNumberFromLevel(Level);
     int Number2 = getRandomNumberFromLevel(Level);
