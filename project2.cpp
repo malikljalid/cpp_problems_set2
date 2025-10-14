@@ -27,4 +27,4 @@ int main(void)
     srand((unsigned int)time(NULL));
     return (0);
 }
-//
+//logic
