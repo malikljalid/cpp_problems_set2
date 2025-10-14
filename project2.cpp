@@ -185,20 +185,43 @@ enOperationsResult setFinalResult(short int WrongAnswers, short int RightAnswers
         return (enOperationsResult::FAIL);
 }
 
-char showOperationsQuizResults(stOperations Operations)
+std::string resultMsg(enOperationsResult i)
 {
     std::string Result[2] = { "FAIL :(", "PASS :)" };
+
+    return (Result[i]);
+}
+
+std::string levelMsg(enOperationsLevel i)
+{
     std::string Level[4]  = { "Easy", "Med", "Hard", "Mix" };
+
+    return (Level[i - 1]);
+}
+
+std::string typeMsg(enOperationsType i)
+{
     std::string Type[5]   = { "+", "-", "*", "/", "Mix" };
+
+    return (Type[i - 1]);
+}
+
+enColor whichColor(enOperationsResult i)
+{
     enColor     Color[2]  = { RED, GREEN };
 
+    return (Color[i]);
+}
+
+char showOperationsQuizResults(stOperations Operations)
+{
     std::cout << "\n\t___________________________\n";
     std::cout << "\t Final Result is  ";
-    textInColor(Result[Operations.FinalResult], Color[Operations.FinalResult]);
+    textInColor(resultMsg(Operations.FinalResult), whichColor(Operations.FinalResult));
     std::cout << "\t___________________________\n";
     std::cout << "\tNumber of questions : " << Operations.NumberOfQuestions << '\n';
-    std::cout << "\tOperations Level    : " << Level[Operations.Level - 1] << '\n';
-    std::cout << "\tOperations Type     : " << Type[Operations.Type - 1] << '\n';
+    std::cout << "\tOperations Level    : " << levelMsg(Operations.Level) << '\n';
+    std::cout << "\tOperations Type     : " << typeMsg(Operations.Type) << '\n';
     std::cout << "\tNumber of Right Answers : " << Operations.RightAnswers << '\n';
     std::cout << "\tNumber of Wrong Answers : " << Operations.WrongAnswers << '\n';
     std::cout << "\t___________________________\n\n";
@@ -208,6 +231,7 @@ char showOperationsQuizResults(stOperations Operations)
         std::cout << "\tDo you want to play again (Y/N) : ";
         std::cin >> Operations.playAgain;
     }
+
     return (Operations.playAgain);
 }
 
