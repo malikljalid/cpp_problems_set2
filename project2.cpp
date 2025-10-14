@@ -5,6 +5,7 @@
 enum    enOperationsLevel    { EASY=1, MED, HARD, MIX };
 enum    enOperationsType     { ADD=1, SUB, MUL, DIV, ALL };
 enum    enOperationsResult   { FAIL, PASS };
+enum    enColor              { RED=31, GREEN=32 };
 
 struct  stOperations
 {
@@ -165,20 +166,20 @@ void playQuestion(stOperations &Operation)
 
     if (userAnswerIsRight(getUserAnswer(), rightAnswer))
     {
-        std::cout << "Right Answer :)\n";
+        textInColor("\nRight Answer :)\n\n", GREEN);
         Operation.RightAnswers++;
     }
     else
     {
-        std::cout << "Wrong Answer :(\n";
-        std::cout << "The right answer is : " << rightAnswer << '\n';
+        textInColor("\nWrong Answer ):", RED);
+        std::cout << "The right answer is : " << rightAnswer << "\n\n\n";
         Operation.WrongAnswers++;
     }
 }
 
-enOperationsResult getFinalResult(short int WrongAnswers, short int RightAnswers)
+enOperationsResult setFinalResult(short int WrongAnswers, short int RightAnswers)
 {
-    if (WrongAnswers >= RightAnswers)
+    if (WrongAnswers <= RightAnswers)
         return (enOperationsResult::PASS);
     else
         return (enOperationsResult::FAIL);
@@ -186,33 +187,35 @@ enOperationsResult getFinalResult(short int WrongAnswers, short int RightAnswers
 
 void showOperationsGameResults(stOperations Operations)
 {
-    std::string Result[2] = { "Fail :(", "PASS :)" };
+    std::string Result[2] = { "FAIL :(", "PASS :)" };
     std::string Level[4]  = { "Easy", "Med", "Hard", "Mix" };
     std::string Type[5]   = { "+", "-", "*", "/", "Mix" };
+    enColor     Color[2]  = { RED, GREEN };
 
-    std::cout << "\n___________________________\n";
-    std::cout << "\tFinal Result is : " << Result[Operations.FinalResult] << '\n';
-    std::cout << "___________________________\n";
-    std::cout << "Number of questions : " << Operations.NumberOfQuestions << '\n';
-    std::cout << "Operations Level : " << Level[Operations.Level - 1] << '\n';
-    std::cout << "Operations Type  : " << Type[Operations.Type - 1] << '\n';
-    std::cout << "Number of Right Answers : " << Operations.RightAnswers << '\n';
-    std::cout << "Number of Wrong Answers : " << Operations.WrongAnswers << '\n';
-    std::cout << "___________________________\n\n";
+    std::cout << "\n\t___________________________\n";
+    std::cout << "\t Final Result is  ";
+    textInColor(Result[Operations.FinalResult], Color[Operations.FinalResult]);
+    std::cout << "\t___________________________\n";
+    std::cout << "\tNumber of questions : " << Operations.NumberOfQuestions << '\n';
+    std::cout << "\tOperations Level    : " << Level[Operations.Level - 1] << '\n';
+    std::cout << "\tOperations Type     : " << Type[Operations.Type - 1] << '\n';
+    std::cout << "\tNumber of Right Answers : " << Operations.RightAnswers << '\n';
+    std::cout << "\tNumber of Wrong Answers : " << Operations.WrongAnswers << '\n';
+    std::cout << "\t___________________________\n\n";
 }
 
-// make the main game math monitor
+
 void gameLoop(void)
 {
     stOperations Operations = initOperations();
 
     for (int i = 0; i < Operations.NumberOfQuestions; i++)
     {
-        std::cout << "Question [" << i << "]\n";
+        std::cout << "\nQuestion [" << i << "]\n";
         playQuestion(Operations);
     }
 
-    Operations.FinalResult = getFinalResult(Operations.WrongAnswers, Operations.RightAnswers);
+    Operations.FinalResult = setFinalResult(Operations.WrongAnswers, Operations.RightAnswers);
     showOperationsGameResults(Operations);
 }
 
